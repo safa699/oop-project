@@ -2,7 +2,6 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <limits>  // Needed for cin.ignore
 using namespace std;
 
 const int MAX_MENU_ITEMS = 100;
