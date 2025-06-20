@@ -33,8 +33,7 @@ private:
 
 public:
     void inputDetails() override {
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
 
         cout << "Enter name: ";
         getline(cin, name);
