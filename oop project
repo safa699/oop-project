@@ -36,9 +36,9 @@ public:
         
 
         cout << "Enter name: ";
-        getline(cin, name);
+        cin>>name;
         cout << "Enter contact number: ";
-        getline(cin, contact);
+        cin>>contact;
     }
 
     void displayInfo() const override {
