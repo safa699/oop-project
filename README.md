@@ -1,8 +1,8 @@
- 🍽️ Restaurant Management System
+# 🍽️ Restaurant Management System
 
-A console-based Restaurant Management System developed in **C++** using Object-Oriented Programming (OOP) concepts. This project simulates the basic operations of a restaurant, including customer management, menu handling, order processing, billing, employee management, table allocation, and sales reporting.
+A console-based **Restaurant Management System** developed in **C++** using Object-Oriented Programming (OOP) concepts. This project simulates the basic operations of a restaurant, including customer management, menu handling, order processing, billing, employee management, table allocation, and sales reporting.
 
- 📌 Features
+## 📌 Features
 
 - 👤 Customer Registration
 - 🍔 Menu Management
@@ -14,14 +14,14 @@ A console-based Restaurant Management System developed in **C++** using Object-O
 - 💾 File Handling for Orders & Sales Records
 - 🏗️ Object-Oriented Design
 
-🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 - C++
 - Object-Oriented Programming (OOP)
 - File Handling
 - Standard Template Library (STL)
 
- 🎯 OOP Concepts Implemented
+## 🎯 OOP Concepts Implemented
 
 - Classes & Objects
 - Inheritance
@@ -32,7 +32,7 @@ A console-based Restaurant Management System developed in **C++** using Object-O
 - Aggregation
 - Association
 
- 📂 Project Structure
+## 📂 Project Structure
 
 ```
 Restaurant Management System
@@ -42,7 +42,7 @@ Restaurant Management System
 │── README.md
 ```
 
-📋 Functionalities
+## 📋 Functionalities
 
 - Add customer details
 - Display restaurant menu
@@ -53,7 +53,7 @@ Restaurant Management System
 - Generate daily sales report
 - Save orders and sales records into text files
 
- ▶️ How to Run
+## ▶️ How to Run
 
 1. Clone the repository
 
@@ -70,7 +70,7 @@ g++ main.cpp -o RestaurantManagement
 ./RestaurantManagement
 ```
 
-📷 Sample Menu
+## 📷 Sample Menu
 
 | ID | Item | Price (Rs.) |
 |----|------|------------:|
@@ -79,7 +79,7 @@ g++ main.cpp -o RestaurantManagement
 | 3 | Fries | 150 |
 | 4 | Cola | 80 |
 
- 📚 Learning Outcomes
+## 📚 Learning Outcomes
 
 This project demonstrates practical implementation of:
 
@@ -89,8 +89,10 @@ This project demonstrates practical implementation of:
 - Data Management
 - Software Design Principles
 
- 👩‍💻 Developer
+## 👩‍💻 Author
 
-Safa Waseem
+**Safa Waseem**
 
 BS Computer Science Student
+
+---
