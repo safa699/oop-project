@@ -1,0 +1,394 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+using namespace std;
+
+const int MAX_MENU_ITEMS = 100;
+const int MAX_ORDER_ITEMS = 50;
+const int MAX_EMPLOYEES = 10;
+const int MAX_TABLES = 10;
+
+// Abstract Base Class - Person
+class Person {
+protected:
+    string name;
+
+public:
+    Person() {}
+    Person(string n) : name(n) {}
+
+    virtual void inputDetails() = 0;
+    virtual void displayInfo() const = 0;
+
+    string getName() const { return name; }
+
+    virtual ~Person() {}
+};
+
+// Derived Class - Customer
+class Customer : public Person {
+private:
+    string contact;
+
+public:
+    void inputDetails() override {
+
+        cout << "Enter name: ";
+        cin>>name;;
+        cout << "Enter contact number: ";
+        cin>>contact;
+    }
+
+    void displayInfo() const override {
+        cout << "Customer Name: " << name << ", Contact: " << contact << endl;
+    }
+};
+
+// Derived Class - Employee
+class Employee : public Person {
+protected:
+    string role;
+    int empId;
+
+public:
+    Employee() {}
+    Employee(int id, string n, string r) : Person(n), empId(id), role(r) {}
+
+    virtual void displayInfo() const override {
+        cout << "Employee ID: " << empId << ", Name: " << name << ", Role: " << role << endl;
+    }
+};
+
+// Waiter Class
+class Waiter : public Employee {
+public:
+    Waiter(int id, string n) : Employee(id, n, "Waiter") {}
+
+    void displayInfo() const override {
+        cout << "Waiter - ";
+        Employee::displayInfo();
+    }
+
+    void inputDetails() override {
+        cout << "Waiter input not required.\n";
+    }
+};
+
+// Chef Class
+class Chef : public Employee {
+public:
+    Chef(int id, string n) : Employee(id, n, "Chef") {}
+
+    void displayInfo() const override {
+        cout << "Chef - ";
+        Employee::displayInfo();
+    }
+
+    void inputDetails() override {
+        cout << "Chef input not required.\n";
+    }
+};
+
+// MenuItem Class
+class MenuItem {
+private:
+    int id;
+    string name;
+    double price;
+
+public:
+    MenuItem() {}
+    MenuItem(int i, string n, double p) : id(i), name(n), price(p) {}
+
+    int getId() const { return id; }
+    string getName() const { return name; }
+    double getPrice() const { return price; }
+
+    void display() const {
+        cout << id << ". " << name << " - Rs. " << price << endl;
+    }
+};
+
+// Menu Class
+class Menu {
+private:
+    MenuItem items[MAX_MENU_ITEMS];//composition
+    int itemCount = 0;
+
+public:
+    void addItem(MenuItem item) {//association
+        if (itemCount < MAX_MENU_ITEMS) {
+            items[itemCount++] = item;
+        }
+    }
+
+    void showMenu() const {
+        cout << "\n--- Menu ---\n";
+        for (int i = 0; i < itemCount; i++) {
+            items[i].display();
+        }
+    }
+
+    MenuItem* getItemById(int id) {
+        for (int i = 0; i < itemCount; i++) {
+            if (items[i].getId() == id)
+                return &items[i];
+        }
+        return nullptr;
+    }
+};
+
+// Table Class
+class Table {
+private:
+    int tableNo;
+    bool isOccupied;
+
+public:
+    Table() : tableNo(0), isOccupied(false) {}
+    Table(int t) : tableNo(t), isOccupied(false) {}
+
+    void assignTable() { isOccupied = true; }
+    void freeTable() { isOccupied = false; }
+
+    bool getStatus() const { return isOccupied; }
+    int getTableNo() const { return tableNo; }
+};
+
+// Table Manager Class
+class TableManager {
+private:
+    Table tables[MAX_TABLES];//composition
+    int tableCount = 0;
+
+public:
+    TableManager() {
+        for (int i = 0; i < 5; i++) {
+            tables[i] = Table(i + 1);
+            tableCount++;
+        }
+    }
+
+    Table* assignTable() {
+        for (int i = 0; i < tableCount; i++) {
+            if (!tables[i].getStatus()) {
+                tables[i].assignTable();
+                return &tables[i];
+            }
+        }
+        return nullptr;
+    }
+
+    void freeTable(int tableNo) {
+        if (tableNo > 0 && tableNo <= tableCount) {
+            if (tables[tableNo - 1].getStatus()) {
+                tables[tableNo - 1].freeTable();
+            }
+        }
+    }
+
+    void showTableStatus() const {
+        for (int i = 0; i < tableCount; i++) {
+            cout << "Table " << tables[i].getTableNo() << ": "
+                 << (tables[i].getStatus() ? "Occupied" : "Free") << endl;
+        }
+    }
+};
+
+// Order Class
+class Order {
+private:
+    MenuItem orderItems[MAX_ORDER_ITEMS];//composition
+    int orderCount = 0;
+
+public:
+    void addItem(MenuItem item) {//association
+        if (orderCount < MAX_ORDER_ITEMS) {
+            orderItems[orderCount++] = item;
+            cout << item.getName() << " added to order.\n";
+        }
+    }
+
+    double calculateTotal() const {
+        double total = 0;
+        for (int i = 0; i < orderCount; i++) {
+            total += orderItems[i].getPrice();
+        }
+        return total;
+    }
+
+    void displayOrder() const {
+        cout << "\n----- Order Summary -----\n";
+        for (int i = 0; i < orderCount; i++) {
+            cout << orderItems[i].getName() << " - Rs. " << orderItems[i].getPrice() << endl;
+        }
+        cout << "--------------------------\n";
+    }
+
+    string getOrderDetails() const {
+        string details;
+        for (int i = 0; i < orderCount; i++) {
+            details += orderItems[i].getName() + " (Rs. " + to_string((int)orderItems[i].getPrice()) + "), ";
+        }
+        return details;
+    }
+};
+
+// Billing Class
+class Billing {
+public:
+    void generateBill(const Order& order) {//association
+        order.displayOrder();
+        cout << "Total Amount: Rs. " << order.calculateTotal() << endl;
+    }
+};
+
+// Report Class
+class Report {
+private:
+    double totalSales = 0;
+
+public:
+    void updateSales(double amount) {
+        totalSales += amount;
+    }
+
+    void showSalesReport() const {
+        cout << "\n***** SALES REPORT *****\n";
+        cout << "Total Sales Today: Rs. " << totalSales << endl;
+        cout << "\n";
+    }
+
+    double getSalesTotal() const {
+        return totalSales;
+    }
+};
+
+// Restaurant Class
+class Restaurant {
+private:
+    Menu menu;//composition
+    TableManager tableManager;//composition
+    Employee* employees[MAX_EMPLOYEES];//aggregation
+    int empCount = 0;
+    Report report;//composition
+
+public:
+    Restaurant() {
+        menu.addItem(MenuItem(1, "Burger", 250));
+        menu.addItem(MenuItem(2, "Pizza", 500));
+        menu.addItem(MenuItem(3, "Fries", 150));
+        menu.addItem(MenuItem(4, "Cola", 80));
+
+        employees[empCount++] = new Waiter(101, "Ali");
+        employees[empCount++] = new Waiter(102, "sania");
+        employees[empCount++] = new Waiter(103, "misbah");
+        employees[empCount++] = new Waiter(104, "ahmed");
+        employees[empCount++] = new Chef(105, "Sara");
+        employees[empCount++] = new Chef(106, "hamna");
+    }
+
+    ~Restaurant() {
+        for (int i = 0; i < empCount; i++) {
+            delete employees[i];
+        }
+    }
+
+    void takeOrder() {
+        Person* customer = new Customer();//aggregation
+        customer->inputDetails();
+
+        Table* table = tableManager.assignTable();//aggregation
+        if (!table) {
+            cout << "No available tables.\n";
+            delete customer;
+            return;
+        }
+        cout << "Assigned Table No: " << table->getTableNo() << endl;
+
+        Order order;//composition
+        int choice;
+        while (true) {
+            menu.showMenu();
+            cout << "Enter item ID to add to order (0 to finish): ";
+            cin >> choice;
+            if (choice == 0) break;
+            MenuItem* item = menu.getItemById(choice);//aggregation
+            if (item) order.addItem(*item);
+            else cout << "Invalid ID.\n";
+        }
+
+        Billing bill;//composition
+        bill.generateBill(order);
+        report.updateSales(order.calculateTotal());
+
+        ofstream fout("orders.txt", ios::app);
+        fout << "Customer: " << customer->getName()
+             << ", Table: " << table->getTableNo()
+             << ", Items: " << order.getOrderDetails()
+             << " Total: Rs. " << order.calculateTotal() << "\n";
+        fout.close();
+
+        delete customer;
+    }
+
+    void showEmployees() const {
+        for (int i = 0; i < empCount; i++) {
+            employees[i]->displayInfo();
+        }
+    }
+
+    void showSalesReport() const {
+        report.showSalesReport();
+    }
+
+    void clearTable() {
+        int tableNo;
+        cout << "Enter table number to clear: ";
+        cin >> tableNo;
+        tableManager.freeTable(tableNo);
+        cout << "Table " << tableNo << " cleared.\n";
+    }
+
+    void showTableStatus() const {
+        tableManager.showTableStatus();
+    }
+
+    void saveDailySalesToFile() const {
+        ofstream fout("sales.txt", ios::app);
+        fout << "Daily Total Sales: Rs. " << report.getSalesTotal() << "\n";
+        fout.close();
+    }
+};
+
+// Main Function
+int main() {
+    Restaurant r;
+    int choice;
+    while (true) {
+        cout << "\n======= Restaurant Management =======\n";
+        cout << "1. Take Order\n";
+        cout << "2. Show Employees\n";
+        cout << "3. Show Sales Report\n";
+        cout << "4. Clear Table\n";
+        cout << "5. Show Table Status\n";
+        cout << "6. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1: r.takeOrder(); break;
+        case 2: r.showEmployees(); break;
+        case 3: r.showSalesReport(); break;
+        case 4: r.clearTable(); break;
+        case 5: r.showTableStatus(); break;
+        case 6:
+            r.saveDailySalesToFile();
+            cout << "Daily sales saved. Exiting...\n";
+            return 0;
+        default:
+            cout << "Invalid choice.\n";
+        }
+    }
+    return 0;
+}
